@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎂</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Trebuchet MS", sans-serif;
+  background: linear-gradient(135deg, #ffe0ec, #f8d9ff, #fff0d8);
+  color: #773552;
+  text-align: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  padding: 28px 16px 50px;
+}
+
+.card {
+  background: rgba(255,255,255,0.78);
+  padding: 28px 18px;
+  border-radius: 25px;
+  box-shadow: 0 10px 35px #b85d7d24;
+  margin: 15px auto;
+  animation: appear 1s ease;
+}
+
+h1 {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  margin: 15px 0;
+  animation: glow 2s infinite alternate;
+}
+
+h2 {
+  margin-bottom: 16px;
+}
+
+p {
+  line-height: 1.8;
+  margin: 12px 0;
+}
+
+.cake {
+  font-size: 75px;
+  animation: bounce 1.5s infinite;
+}
+
+button, .upload-label {
+  background: #ec6b9a;
+  color: white;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 30px;
+  margin: 8px 4px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+button:hover, .upload-label:hover {
+  background: #c7477a;
+  transform: scale(1.04);
+}
+
+input[type="password"] {
+  width: 100%;
+  max-width: 280px;
+  padding: 13px;
+  border: 2px solid #f0a2c0;
+  border-radius: 25px;
+  font-size: 16px;
+  margin: 12px 0;
+  outline: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.photo {
+  background: white;
+  padding: 7px 7px 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px #9c50751c;
+  animation: appear 0.6s ease;
+}
+
+.photo img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.photo p {
+  font-size: 13px;
+  margin: 7px 0 0;
+  overflow-wrap: anywhere;
+}
+
+#message {
+  color: #b72e68;
+  min-height: 25px;
+}
+
+.heart {
+  position: fixed;
+  bottom: -40px;
+  font-size: 22px;
+  pointer-events: none;
+  z-index: -1;
+  animation: floatUp 7s linear forwards;
+}
+
+.confetti {
+  position: fixed;
+  top: -15px;
+  width: 9px;
+  height: 14px;
+  z-index: 10;
+  pointer-events: none;
+  animation: fall 3.5s linear forwards;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-13px) rotate(4deg); }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #ffaccb; }
+  to { text-shadow: 0 0 20px #ff78ae; }
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatUp {
+  to { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0.8; }
+}
+
+@media (max-width: 400px) {
+  .container { padding: 16px 10px 35px; }
+  .card { padding: 23px 13px; }
+  .gallery { gap: 8px; }
+  button, .upload-label { font-size: 14px; padding: 12px 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- WELCOME PAGE -->
+  <section class="card" id="welcome">
+    <div class="cake">🎂</div>
+    <p>✨ A little surprise made just for you ✨</p>
+    <h1>Happy Birthday! 💗</h1>
+    <h2>To My Favourite Human 🫶</h2>
+    <p>
+      Today is all about you! Someone has prepared a little
+      surprise full of love, laughter and beautiful memories.
+    </p>
+    <p>Ready to unlock your birthday surprise? 🎁</p>
+    <button onclick="showPassword()">Open Your Surprise 💌</button>
+  </section>
+
+  <!-- PASSWORD PAGE -->
+  <section class="card hidden" id="lock">
+    <div class="cake">🔐</div>
+    <h2>A Secret Just For You 💕</h2>
+    <p>Enter the secret password to unlock your surprise!</p>
+
+    <form id="passwordForm">
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter secret password"
+        autocomplete="off"
+        required
+      >
+      <br>
+      <button type="submit">Unlock My Surprise 🔓</button>
+    </form>
+    <p id="message" role="status"></p>
+  </section>
+
+  <!-- SURPRISE CONTENT -->
+  <section id="surprise" class="hidden">
+    <div class="card">
+      <div class="cake">🎉🎂🎉</div>
+      <h1>It's Your Special Day! 💖</h1>
+      <h2>Happy Birthday, Bestie! 🥹</h2>
+
+      <p>
+        No matter how busy life gets, I hope we always make time
+        for silly conversations, unforgettable memories and
+        endless laughter.
+      </p>
+      <p>
+        You deserve all the happiness, love and beautiful things
+        this world has to offer. Thank you for being YOU! 💗
+      </p>
+      <p>Here's to more memories, more adventures and more us! 🫂</p>
+      <h2>Love you, bestie! 💐</h2>
+    </div>
+
+    <div class="card">
+      <h2>📸 Our Little Memory Lane</h2>
+      <p>Select photos from your phone or laptop to add them here.</p>
+
+      <label class="upload-label" for="photos">
+        + Add Our Pictures 📷
+      </label>
+      <input
+        id="photos"
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+      >
+
+      <div class="gallery" id="gallery"></div>
+      <p id="photoStatus" aria-live="polite"></p>
+    </div>
+
+    <div class="card">
+      <h2>🎁 One Last Thing...</h2>
+      <p>
+        If I could give you one thing in life, it would be the
+        ability to see yourself through my eyes. Then you'd know
+        just how special you are. 💗
+      </p>
+      <button onclick="celebrate()">More Confetti! 🎊</button>
+      <button onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        Back to Top ↑
+      </button>
+    </div>
+  </section>
+
+  <p style="font-size:13px; margin-top:20px;">
+    Made with ♡, hugs and lots of love.
+  </p>
+
+</div>
+
+<script>
+// CHANGE THIS TO YOUR OWN SECRET PASSWORD
+const SECRET_PASSWORD = "bestie123";
+
+const welcome = document.getElementById("welcome");
+const lock = document.getElementById("lock");
+const surprise = document.getElementById("surprise");
+const passwordForm = document.getElementById("passwordForm");
+const passwordInput = document.getElementById("password");
+const message = document.getElementById("message");
+
+function showPassword() {
+  welcome.classList.add("hidden");
+  lock.classList.remove("hidden");
+  passwordInput.focus();
+}
+
+passwordForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  if (passwordInput.value === SECRET_PASSWORD) {
+    lock.classList.add("hidden");
+    surprise.classList.remove("hidden");
+    message.textContent = "";
+    celebrate();
+  } else {
+    message.textContent = "Oops! Wrong password. Try again 💗";
+    passwordInput.value = "";
+    passwordInput.focus();
+  }
+});
+
+// PHOTO UPLOAD: images are displayed locally in this browser
+const photoInput = document.getElementById("photos");
+const gallery = document.getElementById("gallery");
+const photoStatus = document.getElementById("photoStatus");
+const imageUrls = [];
+
+photoInput.addEventListener("change", function() {
+  const files = Array.from(photoInput.files || []);
+  const maxPhotos = 30;
+  const remaining = maxPhotos - gallery.children.length;
+
+  if (files.length > remaining) {
+    photoStatus.textContent =
+      "You can add up to " + maxPhotos + " pictures.";
+  } else {
+    photoStatus.textContent = "";
+  }
+
+  files.slice(0, Math.max(0, remaining)).forEach(function(file) {
+    if (!file.type.startsWith("image/")) return;
+
+    const url = URL.createObjectURL(file);
+    imageUrls.push(url);
+
+    const frame = document.createElement("div");
+    frame.className = "photo";
+
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "Birthday memory";
+    img.loading = "lazy";
+
+    const caption = document.createElement("p");
+    caption.textContent = file.name.replace(/\.[^.]+$/, "");
+
+    frame.appendChild(img);
+    frame.appendChild(caption);
+    gallery.appendChild(frame);
+  });
+
+  // Allows the same image to be selected again later
+  photoInput.value = "";
+});
+
+// FLOATING HEARTS
+const heartSymbols = ["💗", "💕", "💖", "♡", "✨"];
+
+function createHeart() {
+  const heart = document.createElement("span");
+  heart.className = "heart";
+  heart.textContent =
+    heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 10000);
+}
+
+setInterval(createHeart, 800);
+
+// CONFETTI ANIMATION
+function celebrate() {
+  const symbols = ["🎉", "💖", "✨", "🎊", "💕"];
+
+  for (let i = 0; i < 100; i++) {
+    const piece = document.createElement("span");
+    piece.className = "confetti";
+    piece.textContent =
+      symbols[Math.floor(Math.random() * symbols.length)];
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.animationDelay = Math.random() * 1.5 + "s";
+    piece.style.fontSize = (12 + Math.random() * 14) + "px";
+    document.body.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 5500);
+  }
+}
+</script>
+</body>
+</html>
